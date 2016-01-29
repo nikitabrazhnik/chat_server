@@ -54,9 +54,18 @@ public class ChatCS {
         sj.setBufferText(mfs.getBufferField());
         sj.setClientList(mfs.getClientList());
         sj.setPortNumber(SERVER_PORT);
+
+        SendMessage sm = new SendMessage();
+        sm.setBufferText(mfs.getBufferField());
+        sm.setClientList(mfs.getClientList());
+        
         
         Thread threadServer = new Thread(sj);
         threadServer.start();
+        
+        Thread threadSendMessage = new Thread(sm);
+        threadSendMessage.start();
+        
     }
 
 }

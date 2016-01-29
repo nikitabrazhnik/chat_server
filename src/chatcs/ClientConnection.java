@@ -5,9 +5,15 @@
  */
 package chatcs;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JTextArea;
 import javax.swing.ListModel;
 
 /**
@@ -19,9 +25,14 @@ public class ClientConnection implements Runnable {
     private Socket currentSocket;
     private DefaultListModel clientList;
     private String clientIP;
+    private JTextArea bufferField;
 
     public void setClientList(DefaultListModel clientList) {
         this.clientList = clientList;
+    }
+
+    public void setBufferField(JTextArea bufferField) {
+        this.bufferField = bufferField;
     }
 
     public void setClientName(String clientIP) {
@@ -34,15 +45,33 @@ public class ClientConnection implements Runnable {
 
     @Override
     public void run() {
-        
-      clientIP = currentSocket.getInetAddress().getHostAddress();
-      clientList.addElement(clientIP);
-    
-        while (true) {            
-            
+
+        DataInputStream dis = null;
+        try {
+            //clientIP = currentSocket.getInetAddress().getHostAddress();
+            clientList.addElement(currentSocket);
+
+            dis = new DataInputStream(currentSocket.getInputStream());
+            while (true) {
+                String s = dis.readUTF();
+                bufferField.setText(s);
+
+                if ("exit".equals(s)) {
+                    clientList.removeElement(currentSocket);
+                    dis.close();
+                    return;
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dis.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-    
-    
+
     }
 
 }

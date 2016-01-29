@@ -5,34 +5,23 @@
  */
 package chatcs;
 
-import java.awt.Rectangle;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
 
 /**
  *
  * @author brazhnik
  */
 public class MainFrameServer extends javax.swing.JFrame {
-
+    private final DefaultListModel dLM; 
+    
     /**
      * Creates new form MainFrame
      */
     public MainFrameServer() {
         initComponents();
-        DefaultListModel dM = new DefaultListModel<>();
-     JList jl = new JList(dM);
-     jl.setBounds(new Rectangle(0, jBufferText.getHeight(), jBufferText.getX()-10, jBufferText.getHeight()));
-     //jl.setSize(100, 100);
-     jl.setVisible(true);
-    
-       
-         
-        
-    
+        dLM = new DefaultListModel();
+        jListClients.setModel(dLM);
     }
 
     public JTextArea getBufferField() {
@@ -40,8 +29,7 @@ public class MainFrameServer extends javax.swing.JFrame {
     }
 
       public DefaultListModel getClientList() {
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-          return listModel;
+          return dLM;
     }  
     
     /**
@@ -58,6 +46,8 @@ public class MainFrameServer extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jBufferText = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jListClients = new javax.swing.JList<>();
 
         jInternalFrame1.setVisible(true);
 
@@ -82,14 +72,18 @@ public class MainFrameServer extends javax.swing.JFrame {
 
         jLabel2.setText("Buffer text");
 
+        jScrollPane1.setViewportView(jListClients);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(175, 175, 175)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
@@ -104,7 +98,9 @@ public class MainFrameServer extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
                 .addGap(7, 7, 7)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
 
@@ -152,6 +148,8 @@ public class MainFrameServer extends javax.swing.JFrame {
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JList<String> jListClients;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 

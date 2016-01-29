@@ -7,6 +7,7 @@ package chatcs;
 
 import com.sun.corba.se.impl.orbutil.ORBConstants;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,67 +23,49 @@ import javax.swing.ListModel;
  *
  * @author brazhnik
  */
-public class ServerJob implements Runnable{
-  private JTextArea bufferText;
-  private DefaultListModel clientList;
-  private int portNumber;
-  private ServerSocket serverSocket;    
-  
+public class ServerJob implements Runnable {
 
-  @Override
+    private JTextArea bufferText;
+    private DefaultListModel clientList;
+    private int portNumber;
+    private ServerSocket serverSocket;
+    private Socket ss;
+    private DataOutputStream dos;
+
+    @Override
     public void run() {
-       
 
-       try {
-          serverSocket = new ServerSocket(portNumber);
-      } catch (IOException ex) {
-          Logger.getLogger(ServerJob.class.getName()).log(Level.SEVERE, null, ex);
-      }
-        
-        while (true) {          
-           try {
-               Socket ss = serverSocket.accept();
-               ClientConnection cc = new ClientConnection();
-                       cc.setCurrentSocket(ss);
-                       cc.setClientList(clientList);
-                       Thread clientConection = new Thread(cc);
-                       clientConection.start();
-           } catch (IOException ex) {
-               Logger.getLogger(ServerJob.class.getName()).log(Level.SEVERE, null, ex);
-           }
-      }
-        
-        
-        
-//        
-//        DataInputStream dis;
-//     
-//       
-//       
-//       
-//       
-//       
-//      try {
-//          
-//          dis = new DataInputStream(ss.getInputStream());
-//          
-//      } catch (IOException ex) {
-//          Logger.getLogger(ServerJob.class.getName()).log(Level.SEVERE, null, ex);
-//          return;
-//      }
-//        
-//        
-//        while (true) {
-//           try {
-//               bufferText.setText(dis.readUTF());
-//           } catch (IOException ex) {
-//               Logger.getLogger(ServerJob.class.getName()).log(Level.SEVERE, null, ex);
-//           }
-//        }
-        
+        try {
+            serverSocket = new ServerSocket(portNumber);
+        } catch (IOException ex) {
+            Logger.getLogger(ServerJob.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        while (true) {
+            try {
+                ss = serverSocket.accept();
+            } catch (IOException ex) {
+                Logger.getLogger(ServerJob.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ClientConnection cc = new ClientConnection();
+            cc.setCurrentSocket(ss);
+            cc.setClientList(clientList);
+            cc.setBufferField(bufferText);
+
+            Thread clientConection = new Thread(cc);
+            clientConection.start();
+
+    
+            
+            //re-send messages
+            
+
+        }
+
     }
 
-    public void setBufferText(JTextArea bufferText) {
+    
+public void setBufferText(JTextArea bufferText) {
         this.bufferText = bufferText;
     }
 
@@ -93,9 +76,5 @@ public class ServerJob implements Runnable{
     public void setClientList(DefaultListModel clientList) {
         this.clientList = clientList;
     }
-  
-    
-    
-    
-    
+
 }
